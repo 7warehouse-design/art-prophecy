@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="세븐그림창고 (7 Art Warehouse)">
+    <meta name="copyright" content="Copyright © 2026 ART PROPHECY. All Rights Reserved.">
+    
+    <!-- 이미지 프리로딩 -->
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/7warehouse-design/images/main/image1.png">
+    
+    <title>Art Prophecy - Celestial Guidance</title>
+    
+    <!-- 스타일 라이브러리 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #020617;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        .celestial-gradient {
+            background-color: #020617;
+            background-image: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #020617 80%);
+            background-attachment: fixed;
+        }
+        @keyframes mystic-glitter {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3)) brightness(1); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.8)) brightness(1.3); transform: scale(1.05); }
+        }
+        .animate-mystic-glitter { animation: mystic-glitter 4s infinite ease-in-out; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e1b4b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+    </style>
+
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="module">
+        import React, { useState, useEffect, useRef } from 'react';
+        import ReactDOM from 'react-dom/client';
+
+        // --- Data: ART_DATABASE ---
+        const ART_DATABASE = [
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img1.png",
+                keyword: { KR: "창조", EN: "Creation" },
+                summary: { KR: "당신은 대양에서 태어나는 새", EN: "You are a bird born from the ocean" },
+                detailedAnalysis: {
+                    KR: "당신은 대양에서 태어나는 새입니다. 당신은 독수리와 같은 존재입니다. 대양의 하얀 물결 속에서 탄생한 듯 당신은 하늘 높이 모든 것을 관찰하며 통찰력을 발휘할 수 있는 특별한 시야를 지니고 있습니다. 깃털 하나 젖지 않고 깊은 물 속으로 뛰어들어 큰 물고기를 낚아 채는 탁월한 능력을 가졌듯이, 당신도 어떤 어려움 속에서도 목표를 이루어내는 힘을 가지고 있습니다.",
+                    EN: "You are a bird born from the great ocean. Born amidst the white waves of the sea, you possess a special vision to observe everything from high above and exercise profound insight."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img2.png",
+                keyword: { KR: "창조", EN: "Creation" },
+                summary: { KR: "당신은 일상을 창조하는 사람", EN: "You are the creator of your daily life" },
+                detailedAnalysis: {
+                    KR: "당신의 말 한마디가 세상을 바꿀 수 있습니다. 새해를 맞이하며 하는 말은 당신의 1년을 창조하고, 새로운 달에 하는 말은 그 달의 31일을 채워갑니다. 하루를 시작하며 하는 말은 24시간의 방향을 결정하고, 모든 순간에 하는 말은 당신 삶의 모든 일을 창조합니다.",
+                    EN: "Your every word has the power to change the world. Your words in every moment create every event of your life."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img10.png",
+                keyword: { KR: "성장", EN: "Growth" },
+                summary: { KR: "당신처럼 행복한 사람이 있을까?", EN: "Is there anyone as happy as you?" },
+                detailedAnalysis: {
+                    KR: "당신처럼 행복한 사람이 있을까? 당신이 느끼는 절망은 사실 새로운 시작을 위한 준비일지도 모릅니다. 그는 구름에 몸을 맡기며 한 발을 내딛고 있습니다. 그것은 단순한 발걸음이 아니라, 가장 높은 곳으로 날아오르기 위한 첫걸음입니다.",
+                    EN: "Is there anyone as happy as you? The despair you feel might actually be a preparation for a new beginning."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img11.png",
+                keyword: { KR: "연합", EN: "Union" },
+                summary: { KR: "회복과 풍요의 흐름을 만드는 존재", EN: "Creating a flow of recovery and abundance" },
+                detailedAnalysis: {
+                    KR: "많은 물줄기가 하나의 도시를 채우고, 그곳에 생명을 불어넣고 있습니다. 다른 도시들이 당신을 지지하며 응원하고, 서로 연결되어 하나의 거대한 대양을 이루어 갑니다.",
+                    EN: "Countless streams fill a city, breathing life into it. Other cities support and cheer for you."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img3.png",
+                keyword: { KR: "자유", EN: "Freedom" },
+                summary: { KR: "당신은 춤추는 자", EN: "The Dancer" },
+                detailedAnalysis: {
+                    KR: "당신이 춤을 추기 시작하면, 당신의 자유로움이 새로운 가능성을 꽃피우게 될 것입니다. 먼저, 당신 자신부터 자유로워지세요. 바람에 흩날리는 꽃잎처럼 춤추며 그 순간을 즐기세요.",
+                    EN: "When you start to dance, your freedom will bloom new possibilities. First, be free from yourself."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img4.png",
+                keyword: { KR: "자유", EN: "Freedom" },
+                summary: { KR: "당신의 독보성", EN: "Your Uniqueness" },
+                detailedAnalysis: {
+                    KR: "당신의 삶은 이미 놀라운 가능성으로 가득 차 있습니다. 갈망하면 이루어질 것입니다. 구하면 반드시 찾게 될 것입니다. 실패를 겪을 때마다 더 큰 지혜와 능력이 당신에게 올 것입니다.",
+                    EN: "Your uniqueness is already full of amazing possibilities. If you seek, you will surely find."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img5.png",
+                keyword: { KR: "용기", EN: "Courage" },
+                summary: { KR: "당신은 용사", EN: "You are a Warrior" },
+                detailedAnalysis: {
+                    KR: "당신은 이미 강한 군사입니다. 완전한 무장을 갖추신 당신은 투구를 쓰고 허리띠를 단단히 매시며, 견고한 갑옷을 입었습니다. 손에는 강력한 방패가 들려 있고, 가장 날카로운 검을 쥐고 있습니다.",
+                    EN: "You are already a strong soldier. Fully armed, you hold the sharpest sword. Now, step forward for peace!"
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img6.png",
+                keyword: { KR: "사랑", EN: "Love" },
+                summary: { KR: "물과 불을 만나게 하는 당신", EN: "The One who brings Water and Fire together" },
+                detailedAnalysis: {
+                    KR: "당신의 삶에 놀라운 변화가 일어나고 있습니다. 물과 불이 섞이는 것처럼, 서로 만나지 못할 것 같던 극과 극의 경계가 허물어졌습니다. 슬픔은 기쁨으로 바뀌고, 절망은 소망으로 변합니다.",
+                    EN: "Amazing changes are happening in your life. Like water and fire mixing, the boundaries between extremes have broken down."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img7.png",
+                keyword: { KR: "사랑", EN: "Love" },
+                summary: { KR: "창조적 깊은 사랑을 받는 자", EN: "One who receives Deep Creative Love" },
+                detailedAnalysis: {
+                    KR: "당신은 매일 더욱 깊은 창조적 사랑을 나누고 있습니다. 햇빛은 날마다 당신을 새롭게 비추며 따뜻한 사랑으로 감싸고 있습니다. 바람은 부드러운 속삭임으로 당신께 사랑을 전합니다.",
+                    EN: "Every day you are sharing a deeper creative love. Sunlight shines upon you newly every day."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img8.png",
+                keyword: { KR: "용기", EN: "Courage" },
+                summary: { KR: "사자의 심장을 가진 자", EN: "One with the Heart of a Lion" },
+                detailedAnalysis: {
+                    KR: "당신은 사자의 눈을 보면서 강한 심장을 갖게 되었습니다. 그 눈 속에서 가족을 사랑하고 보호하는 강렬한 심장박동을 느끼셨고, 당신의 내면에는 뜨거운 용기와 책임감이 피어나기 시작했습니다.",
+                    EN: "By looking into the eyes of a lion, you have gained a strong heart. Hot courage and responsibility began to bloom."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img12.png",
+                keyword: { KR: "사랑", EN: "Love" },
+                summary: { KR: "보이지 않는 것의 힘을 믿는 자", EN: "One who believes in the Power of the Invisible" },
+                detailedAnalysis: {
+                    KR: "당신은 깊고 어두운 곳에서 있었습니다. 마치 깊은 동굴 속에서 하나의 옹달샘을 만들어내듯, 당신의 삶에도 작지만 끊임없는 변화가 일어났습니다. 마침내 바위 속을 뚫고 새로 태어났습니다.",
+                    EN: "You were in a deep and dark place. Finally, you broke through the rock and were born anew."
+                }
+            },
+            {
+                url: "https://raw.githubusercontent.com/7warehouse-design/images/main/img9.png",
+                keyword: { KR: "개척", EN: "Pioneering" },
+                summary: { KR: "새 길을 만드는 자", EN: "The One who makes a New Road" },
+                detailedAnalysis: {
+                    KR: "당신은 새로운 길을 열어가고 계십니다. 소나무 숲 사이로 하나의 대로가 펼쳐지며, 그 길은 여러 갈래로 뻗어나가고 있습니다. 이것은 당신께서 만들어 가고 있는 새로운 미래입니다.",
+                    EN: "You are opening a new path. A main road unfolds through the pine forest. This is the new future you are creating."
+                }
+            }
+        ];
+
+        // --- Helper: urlToBase64 ---
+        async function urlToBase64(url) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (e) { return ""; }
+        }
+
+        // --- Component: FortuneForm ---
+        const FortuneForm = ({ onSubmit, onCancel, lang }) => {
+            const [info, setInfo] = useState({ name: '', gender: 'male', age: '20대' });
+            const ft = {
+                KR: { name: '이름', age: '나이', gender: '성별', male: '남성', female: '여성', submit: '내 그림 확인', back: '돌아가기', placeholder: '이름을 입력해주세요' },
+                EN: { name: 'Name', age: 'Age', gender: 'Gender', male: 'Male', female: 'Female', submit: 'Check My Picture', back: 'Back', placeholder: 'Enter your name' }
+            }[lang === 'KR' ? 'KR' : 'EN'];
+            const ageOptions = lang === 'KR' ? ['10대', '20대', '30~40', '50~60', '70대+'] : ['10s', '20s', '30-40', '50-60', '70+'];
+
+            return (
+                <div className="max-w-md mx-auto bg-[#1e1b4b]/80 backdrop-blur-2xl p-8 rounded-3xl border-2 border-[#d4af37]/30 shadow-2xl">
+                    <h2 className="text-3xl font-black mb-10 text-[#d4af37] text-center">그림 예언</h2>
+                    <form onSubmit={(e) => { e.preventDefault(); onSubmit(info); }} className="space-y-8">
+                        <div>
+                            <label className="block text-sm font-bold mb-3 text-slate-300 uppercase tracking-widest">{ft.name}</label>
+                            <input required className="w-full bg-white/5 border-2 border-white/10 rounded-xl p-4 text-white focus:border-[#d4af37] outline-none" value={info.name} onChange={(e) => setInfo({...info, name: e.target.value})} placeholder={ft.placeholder} />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold mb-3 text-slate-300 uppercase tracking-widest">{ft.gender}</label>
+                            <div className="flex gap-4 bg-white/5 p-2 rounded-2xl border-2 border-white/10">
+                                {['male', 'female'].map(g => (
+                                    <button key={g} type="button" onClick={() => setInfo({...info, gender: g})} className={`flex-1 py-3 rounded-xl font-black transition-all ${info.gender === g ? 'bg-[#6d28d9] text-white shadow-lg' : 'text-slate-400'}`}>{g === 'male' ? ft.male : ft.female}</button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold mb-3 text-slate-300 uppercase tracking-widest">{ft.age}</label>
+                            <div className="flex flex-wrap gap-2">
+                                {ageOptions.map(age => (
+                                    <button key={age} type="button" onClick={() => setInfo({...info, age})} className={`flex-1 min-w-[60px] py-2 rounded-xl border-2 font-bold transition-all text-xs ${info.age === age ? 'bg-[#d4af37] border-[#d4af37] text-black shadow-lg' : 'bg-white/5 border-white/10 text-slate-300'}`}>{age}</button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="pt-4 space-y-4">
+                            <button type="submit" className="w-full bg-gradient-to-r from-[#d4af37] to-[#fde68a] text-black font-black py-5 rounded-2xl hover:scale-105 transition-all text-xl">내 그림 확인</button>
+                            <button type="button" onClick={onCancel} className="w-full text-slate-500 hover:text-white font-bold text-sm">돌아가기</button>
+                        </div>
+                    </form>
+                </div>
+            );
+        };
+
+        // --- Component: FortuneResult ---
+        const FortuneResult = ({ result, onReset, lang }) => {
+            const rt = {
+                KR: { restart: '새로운 그림 보기', greeting: '<빛나는 당신에게>', postcard: '그림엽서 문자발송', storeUrl: 'https://smartstore.naver.com/7p_warehouse/products/11698974318', tags: [{name:'이태원의 발칙한 상상', url:'https://smartstore.naver.com/7p_warehouse/products/11259205454'}] },
+                EN: { restart: 'View Another', greeting: '<To the Radiant You>', postcard: 'Send SMS Postcard', storeUrl: 'https://smartstore.naver.com/7p_warehouse/', tags: [{name:'Naughty Imagination', url:'https://www.instagram.com/7warehouse_official/'}] }
+            }[lang === 'KR' ? 'KR' : 'EN'];
+            const logoUrl = "https://raw.githubusercontent.com/7warehouse-design/images/main/%EB%A1%9C%EA%B3%A0600-600.png";
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in zoom-in-95 duration-700 pb-20 px-4">
+                    <div className="text-center space-y-8 flex flex-col items-center">
+                        <div className="inline-block px-6 py-2 bg-[#d4af37]/20 border-2 border-[#d4af37]/40 rounded-full text-sm font-black text-[#d4af37] tracking-[0.2em] uppercase">{rt.greeting}</div>
+                        <h2 className="text-2xl md:text-5xl font-black text-white italic drop-shadow-lg">"{result.summary}"</h2>
+                    </div>
+                    <div className="relative group mx-auto w-full">
+                        <div className="relative bg-[#0f172a]/95 backdrop-blur-3xl p-4 md:p-6 rounded-[2.5rem] border-2 border-[#d4af37]/20 shadow-2xl overflow-hidden">
+                            <div className="w-full min-h-[300px] max-h-[70vh] rounded-[2rem] overflow-hidden border-4 border-[#d4af37] bg-black/40 relative flex items-center justify-center">
+                                <img src={result.imageUrl} draggable="false" className="w-full h-full object-contain" />
+                                <div className="absolute bottom-4 right-4 pointer-events-none z-20"><img src={logoUrl} className="w-14 h-14 md:w-24 md:h-24 opacity-80" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white/5 backdrop-blur-md p-8 md:p-12 rounded-[2.5rem] border border-white/10 shadow-xl relative overflow-hidden">
+                        <h3 className="text-xl md:text-2xl font-black text-[#d4af37] mb-8">{`<${result.keyword} 따라가는 여정>`}</h3>
+                        <div className="text-slate-200 text-lg md:text-2xl leading-relaxed whitespace-pre-wrap">{result.detailedAnalysis}</div>
+                        <div className="mt-16 flex flex-col items-center gap-10">
+                            <a href={rt.storeUrl} target="_blank" className="bg-[#d4af37] text-black px-8 py-4 rounded-full font-black hover:scale-110 transition-all">{rt.postcard}</a>
+                            <img src={logoUrl} className="w-16 h-16 opacity-90 animate-mystic-glitter" />
+                        </div>
+                    </div>
+                    <button onClick={onReset} className="w-full py-5 px-16 bg-[#d4af37] text-black hover:bg-white hover:translate-x-2 transition-all font-black text-xl md:text-2xl" style={{clipPath:'polygon(0% 0%, 15% 50%, 0% 100%, 85% 100%, 100% 50%, 85% 0%)'}}>{rt.restart}</button>
+                </div>
+            );
+        };
+
+        // --- App Component ---
+        const App = () => {
+            const [lang, setLang] = useState('KR');
+            const [step, setStep] = useState('home');
+            const [result, setResult] = useState(null);
+            const [isPlay, setIsPlay] = useState(false);
+            const [loadingMsg, setLoadingMsg] = useState('');
+            const audioRef = useRef(null);
+
+            const t = {
+                KR: { title: '12가지 빛의 여정', sub: "세븐그림창고의 '발칙한 상상' 그림이 당신에게 말을 겁니다.\n2026년, 당신 속 깊은 우물을 파 주는 특별한 그림을 만나보세요.", btn: '나의 그림 찾기', loading: ['영혼과 공명하는 그림을 찾는 중...', '우주의 흐름을 그림에 담고 있습니다...'] },
+                EN: { title: 'Journey of 12 Lights', sub: "The 'Naughty Imagination' artwork from 7 Art Warehouse speaks to you.", btn: 'Find My Picture', loading: ['Finding resonance with your soul...', 'Capturing the universe into the image...'] }
+            }[lang];
+
+            useEffect(() => {
+                let it;
+                if (step === 'loading') {
+                    let i = 0; setLoadingMsg(t.loading[0]);
+                    it = setInterval(() => { i = (i+1)%t.loading.length; setLoadingMsg(t.loading[i]); }, 1500);
+                }
+                return () => clearInterval(it);
+            }, [step, lang]);
+
+            const handleFormSubmit = (info) => {
+                setStep('loading');
+                const selected = ART_DATABASE[Math.floor(Math.random()*ART_DATABASE.length)];
+                const res = { summary: selected.summary[lang], detailedAnalysis: selected.detailedAnalysis[lang], imageUrl: selected.url, keyword: selected.keyword[lang] };
+                setTimeout(() => { setResult(res); setStep('result'); }, 3800);
+            };
+
+            return (
+                <div className="min-h-screen celestial-gradient text-white selection:bg-[#d4af37]/40">
+                    <audio ref={audioRef} loop src="https://raw.githubusercontent.com/7warehouse-design/images/main/best%20my%20music_lyrics.mp3" />
+                    <nav className="p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto backdrop-blur-md bg-white/5 border-b border-white/10 mb-8 rounded-b-2xl">
+                        <div className="text-2xl font-black tracking-tighter" onClick={() => setStep('home')}>ART <span className="text-[#d4af37]">PROPHECY</span></div>
+                        <div className="flex gap-4">
+                            <div className="bg-black/50 p-1 rounded-full flex">
+                                {['KR', 'EN'].map(l => (
+                                    <button key={l} onClick={() => setLang(l)} className={`px-4 py-1.5 rounded-full text-xs font-black transition-all ${lang === l ? 'bg-[#7c3aed]' : 'text-slate-400'}`}>{l}</button>
+                                ))}
+                            </div>
+                            <button onClick={() => { if(isPlay) audioRef.current.pause(); else audioRef.current.play(); setIsPlay(!isPlay); }} className={`w-10 h-10 rounded-full flex items-center justify-center border border-white/10 ${isPlay ? 'bg-[#7c3aed]' : 'bg-black/50'}`}>♪</button>
+                        </div>
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto px-6 py-12">
+                        {step === 'home' && (
+                            <div className="flex flex-col items-center justify-center text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                                <div className="space-y-6 max-w-4xl">
+                                    <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-violet-400">{t.title}</h1>
+                                    <p className="text-lg md:text-xl text-slate-300 leading-relaxed whitespace-pre-line">{t.sub}</p>
+                                </div>
+                                <div className="relative group w-64 h-80 md:w-80 md:h-[420px] bg-[#2e1065] rounded-2xl border-2 border-[#d4af37]/40 overflow-hidden cursor-pointer shadow-2xl" onClick={() => setStep('form')}>
+                                    <img src="https://raw.githubusercontent.com/7warehouse-design/images/main/image1.png" className="w-full h-full object-contain p-4" />
+                                </div>
+                                <button onClick={() => setStep('form')} className="px-16 py-6 bg-[#d4af37] text-black font-black text-2xl rounded-full hover:scale-110 transition-all">{t.btn}</button>
+                            </div>
+                        )}
+                        {step === 'form' && <FortuneForm onSubmit={handleFormSubmit} onCancel={() => setStep('home')} lang={lang} />}
+                        {step === 'loading' && (
+                            <div className="text-center min-h-[50vh] flex flex-col items-center justify-center space-y-12">
+                                <div className="w-40 h-40 border-[12px] border-white/5 border-t-[#d4af37] rounded-full animate-spin"></div>
+                                <p className="text-2xl md:text-3xl font-black text-violet-300 animate-pulse">{loadingMsg}</p>
+                            </div>
+                        )}
+                        {step === 'result' && result && <FortuneResult result={result} onReset={() => setStep('home')} lang={lang} />}
+                    </main>
+
+                    <footer className="mt-24 p-12 border-t border-white/10 text-center text-slate-400 text-xs bg-black/40">
+                        <p className="text-[#d4af37] font-black uppercase mb-4 tracking-widest">© 2026 ART PROPHECY 세븐그림창고</p>
+                        <p className="opacity-60">All Artworks & Texts are protected by copyright law.</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
